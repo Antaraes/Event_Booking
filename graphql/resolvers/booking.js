@@ -5,7 +5,10 @@ const User = require("../../models/user");
 const Event = require("../../models/event");
 
 module.exports = {
-  bookings: async () => {
+  bookings: async (args, req) => {
+    if (!req.user) {
+      throw new Error("Unauthorized");
+    }
     try {
       const bookings = await Booking.find();
       return bookings.map(async (booking) => {
@@ -22,7 +25,10 @@ module.exports = {
     }
   },
 
-  bookEvent: async (args) => {
+  bookEvent: async (args, req) => {
+    if (!req.user) {
+      throw new Error("Unauthorized");
+    }
     try {
       const fetchEvent = await Event.findOne({ _id: args.eventId });
       if (!fetchEvent) {
@@ -51,7 +57,10 @@ module.exports = {
       throw error;
     }
   },
-  cancelBooking: async (args) => {
+  cancelBooking: async (args, req) => {
+    if (!req.user) {
+      throw new Error("Unauthorized");
+    }
     try {
       const booking = await Booking.findById(args.bookingId).populate("event");
 
